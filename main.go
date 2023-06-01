@@ -48,8 +48,7 @@ func gopacketDecodeIPv6ExtensionBase(data []byte, df gopacket.DecodeFeedback) (i
 
 // Copy of IPv6Routing from gopacket's layers/ip6.go
 // with the following modifications:
-// - Added SRv6 Fields (`LastEntry`, `Flags`, `Tag`, `SegmentList`)
-// - Removes the no longer relevant `Reserved` Field
+// - Added SRv6 Fields (`LastEntry`, `Flags`, `Tag`)
 type IPv6Routing struct {
 	gopacketIpv6ExtensionBase
 	RoutingType      uint8
@@ -58,8 +57,7 @@ type IPv6Routing struct {
 	LastEntry        uint8
 	Flags            uint8
 	Tag              uint16
-	SourceRoutingIPs []net.IP // only for RoutingType == 0
-	SegmentList      []net.IP // only for RoutingType == 4
+	SourceRoutingIPs []net.IP // Segment List
 }
 
 // Copy of LayerType method from gopacket's layers/ip6.go
