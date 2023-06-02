@@ -130,7 +130,7 @@ func (i *IPv6Routing) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Seri
 		copy(bytes[4:], i.Reserved)
 	case 4:
 		if opts.FixLengths {
-			i.LastEntry = uint8(len(i.SourceRoutingIPs))
+			i.LastEntry = uint8(len(i.SourceRoutingIPs)) - 1
 		}
 		bytes[4] = i.LastEntry
 		bytes[5] = i.Flags
