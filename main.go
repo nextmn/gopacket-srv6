@@ -93,7 +93,7 @@ func (i *IPv6Routing) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) e
 	default:
 		return fmt.Errorf("IPv6Routing: RoutingType %d not supported", i.RoutingType)
 	}
-	i.SourceRoutingIPs = make([]net.IP, i.LastEntry)
+	i.SourceRoutingIPs = make([]net.IP, i.LastEntry+1)
 	for j := 0; j <= int(i.LastEntry); j++ {
 		i.SourceRoutingIPs[j] = net.IP(data[8+j*16 : 8+j*16+16])
 	}
