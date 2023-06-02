@@ -87,7 +87,7 @@ func (i *IPv6Routing) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) e
 		i.LastEntry = data[4]
 		i.Flags = data[5]
 		i.Tag = binary.BigEndian.Uint16(data[6:8])
-		if len(data)-8 < int(i.LastEntry)*16 {
+		if len(data)-8 < (1+int(i.LastEntry))*16 {
 			return fmt.Errorf("IPv6Routing: data too short")
 		}
 	default:
