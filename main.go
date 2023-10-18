@@ -22,7 +22,7 @@ import (
 var LayerTypeIPv6Routing = gopacket.OverrideLayerType(47, gopacket.LayerTypeMetadata{Name: "IPv6Routing", Decoder: gopacket.DecodeFunc(decodeIPv6Routing)})
 
 // Copy of ipv6ExtensionBase from gopacket's layers/ip6.go
-type gopacketIpv6ExtensionBase struct {
+type GopacketIpv6ExtensionBase struct {
 	layers.BaseLayer
 	NextHeader   layers.IPProtocol
 	HeaderLength uint8
@@ -30,16 +30,16 @@ type gopacketIpv6ExtensionBase struct {
 }
 
 // Copy of decodeIPv6ExtensionBase from gopacket's layers/ip6.go
-func gopacketDecodeIPv6ExtensionBase(data []byte, df gopacket.DecodeFeedback) (i gopacketIpv6ExtensionBase, returnedErr error) {
+func gopacketDecodeIPv6ExtensionBase(data []byte, df gopacket.DecodeFeedback) (i GopacketIpv6ExtensionBase, returnedErr error) {
 	if len(data) < 2 {
 		df.SetTruncated()
-		return gopacketIpv6ExtensionBase{}, fmt.Errorf("Invalid ip6-extension header. Length %d less than 2", len(data))
+		return GopacketIpv6ExtensionBase{}, fmt.Errorf("Invalid ip6-extension header. Length %d less than 2", len(data))
 	}
 	i.NextHeader = layers.IPProtocol(data[0])
 	i.HeaderLength = data[1]
 	i.ActualLength = int(i.HeaderLength)*8 + 8
 	if len(data) < i.ActualLength {
-		return gopacketIpv6ExtensionBase{}, fmt.Errorf("Invalid ip6-extension header. Length %d less than specified length %d", len(data), i.ActualLength)
+		return GopacketIpv6ExtensionBase{}, fmt.Errorf("Invalid ip6-extension header. Length %d less than specified length %d", len(data), i.ActualLength)
 	}
 	i.Contents = data[:i.ActualLength]
 	i.Payload = data[i.ActualLength:]
@@ -50,7 +50,7 @@ func gopacketDecodeIPv6ExtensionBase(data []byte, df gopacket.DecodeFeedback) (i
 // with the following modifications:
 // - Added SRv6 Fields (`LastEntry`, `Flags`, `Tag`)
 type IPv6Routing struct {
-	gopacketIpv6ExtensionBase
+	GopacketIpv6ExtensionBase
 	RoutingType      uint8
 	SegmentsLeft     uint8
 	Reserved         []byte // only for RoutingType != 4
@@ -66,7 +66,7 @@ func (i *IPv6Routing) LayerType() gopacket.LayerType { return LayerTypeIPv6Routi
 // Copy of DecodeFromBytes from PR 1040
 func (i *IPv6Routing) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 	var err error
-	i.gopacketIpv6ExtensionBase, err = gopacketDecodeIPv6ExtensionBase(data, df)
+	i.GopacketIpv6ExtensionBase, err = gopacketDecodeIPv6ExtensionBase(data, df)
 	if err != nil {
 		return err
 	}
