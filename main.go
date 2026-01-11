@@ -33,13 +33,13 @@ type GopacketIpv6ExtensionBase struct {
 func gopacketDecodeIPv6ExtensionBase(data []byte, df gopacket.DecodeFeedback) (i GopacketIpv6ExtensionBase, returnedErr error) {
 	if len(data) < 2 {
 		df.SetTruncated()
-		return GopacketIpv6ExtensionBase{}, fmt.Errorf("Invalid ip6-extension header. Length %d less than 2", len(data))
+		return GopacketIpv6ExtensionBase{}, fmt.Errorf("invalid ip6-extension header: length %d less than 2", len(data))
 	}
 	i.NextHeader = layers.IPProtocol(data[0])
 	i.HeaderLength = data[1]
 	i.ActualLength = int(i.HeaderLength)*8 + 8
 	if len(data) < i.ActualLength {
-		return GopacketIpv6ExtensionBase{}, fmt.Errorf("Invalid ip6-extension header. Length %d less than specified length %d", len(data), i.ActualLength)
+		return GopacketIpv6ExtensionBase{}, fmt.Errorf("invalid ip6-extension header: length %d less than specified length %d", len(data), i.ActualLength)
 	}
 	i.Contents = data[:i.ActualLength]
 	i.Payload = data[i.ActualLength:]
